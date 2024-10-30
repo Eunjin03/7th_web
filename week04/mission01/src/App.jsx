@@ -12,6 +12,7 @@ import NowPlayingPage from "./pages/NowPlayingPage.jsx";
 import PopularPage from "./pages/PopularPage.jsx";
 import TopRatedPage from "./pages/TopRatedPage.jsx";
 import UpcomingPage from "./pages/UpComingPage.jsx";
+import MovieDetailPage from "./pages/MovieDetailPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,7 @@ const router = createBrowserRouter([
       { path: "category/popular", element: <PopularPage /> },
       { path: "category/top-rated", element: <TopRatedPage /> },
       { path: "category/upcoming", element: <UpcomingPage /> },
+      { path: "movie/:movieId", element: <MovieDetailPage /> },
     ],
   },
 ]);

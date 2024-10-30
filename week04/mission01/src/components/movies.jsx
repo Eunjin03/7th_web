@@ -1,10 +1,18 @@
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const Movie = ({ movie }) => {
+  const navigate = useNavigate();
+
   return (
     <StyledButton
       background={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+      onClick={() =>
+        navigate(`/movie/${movie.id}`, {
+          replace: false,
+          state: { id: movie.id },
+        })
+      }
     >
       <Overlay className="overlay"></Overlay>
     </StyledButton>

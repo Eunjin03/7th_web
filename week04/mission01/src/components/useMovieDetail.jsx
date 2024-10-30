@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 // Custom Hook
-const useFetchMovies = (requestAdr) => {
+const useMovieDetail = (requestAdr) => {
   const [movies, setMovies] = useState([]);
   const [isError, setError] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -19,7 +19,7 @@ const useFetchMovies = (requestAdr) => {
             },
           }
         );
-        setMovies(response.data.results); // 데이터를 상태에 저장
+        setMovies(response.data); // 데이터를 상태에 저장
       } catch (err) {
         setError(true);
       } finally {
@@ -34,4 +34,4 @@ const useFetchMovies = (requestAdr) => {
   return { movies, isLoading, isError }; // API 데이터를 리턴
 };
 
-export default useFetchMovies;
+export default useMovieDetail;

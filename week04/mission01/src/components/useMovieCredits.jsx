@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 // Custom Hook
-const useFetchMovies = (requestAdr) => {
-  const [movies, setMovies] = useState([]);
+const useMovieCredits = (requestAdr) => {
+  const [casts, setCast] = useState([]);
   const [isError, setError] = useState(false);
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
-    const getMovies = async () => {
+    const getCredits = async () => {
       setLoading(true); // API 호출 전에 로딩 상태 true로 변경
       try {
         const response = await axios.get(
@@ -19,7 +19,7 @@ const useFetchMovies = (requestAdr) => {
             },
           }
         );
-        setMovies(response.data.results); // 데이터를 상태에 저장
+        setCast(response.data.cast); // 데이터를 상태에 저장
       } catch (err) {
         setError(true);
       } finally {
@@ -27,11 +27,11 @@ const useFetchMovies = (requestAdr) => {
       }
     };
     if (requestAdr) {
-      getMovies(); // requestAdr가 유효할 때만 API 호출
+      getCredits(); // requestAdr가 유효할 때만 API 호출
     }
   }, [requestAdr]); // 의존성 배열에 requestAdr 추가
 
-  return { movies, isLoading, isError }; // API 데이터를 리턴
+  return { casts, isLoading, isError }; // API 데이터를 리턴
 };
 
-export default useFetchMovies;
+export default useMovieCredits;
