@@ -14,7 +14,7 @@ const UpcomingPage = () => {
     );
   }
 
-  if (isError || isErrorCast) {
+  if (isError) {
     return (
       <Wrapper>
         <p style={{ color: "white" }}>Error fetching movie details.</p>
