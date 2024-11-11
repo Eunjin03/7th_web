@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Card from "../components/movies.jsx";
-import useFetchMovies from "../components/useFetchMovies.jsx";
+import useFetchMovies from "../customHook/useFetchMovies.jsx";
 const UpcomingPage = () => {
   const { movies, isLoading, isError } = useFetchMovies(
     "/movie/upcoming?language=ko-KR&page=1"

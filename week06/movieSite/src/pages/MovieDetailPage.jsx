@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
-import useMovieDetail from "../components/useMovieDetail.jsx";
-import useMovieCredits from "../components/useMovieCredits.jsx";
+import useMovieDetail from "../customHook/useMovieDetail.jsx";
+import useMovieCredits from "../customHook/useMovieCredits.jsx";
 import Cast from "../components/profile.jsx";
 
 const MovieDetailPage = () => {

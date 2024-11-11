@@ -2,8 +2,11 @@ import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import useSignUp from "../customHook/useSignUp";
 
 const SignsupPage = () => {
+  const { isSignUp, isLoading, isError, signUp } = useSignUp();
+
   const schema = yup.object().shape({
     email: yup
       .string()
@@ -23,12 +26,18 @@ const SignsupPage = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isValid },
   } = useForm({ resolver: yupResolver(schema), mode: "onChange" });
 
-  const onSubmit = (data) => {
-    console.log("폼 데이터 제출");
-    console.log(data);
+  const onSubmit = async (data) => {
+    const { email, password, passwordCheck } = data;
+
+    const result = await signUp(email, password, passwordCheck); // signUp 함수 실행 후 결과 확인
+
+    if (result) {
+      reset(); // 회원가입 성공 시 입력 필드 초기화
+    }
   };
 
   return (
@@ -36,7 +45,7 @@ const SignsupPage = () => {
       <StyledH1> 회원가입 </StyledH1>
       <StyledForm onSubmit={handleSubmit(onSubmit)}>
         <StyledInput
-          type={`email`}
+          type="email"
           placeholder="이메일을 입력해주세요 !"
           {...register("email")}
           isValidate={!!errors.email}
@@ -45,7 +54,7 @@ const SignsupPage = () => {
           {errors.email?.message}
         </p>
         <StyledInput
-          type={`password`}
+          type="password"
           placeholder="비밀번호를 입력해주세요 !"
           {...register("password")}
           isValidate={!!errors.password}
@@ -54,7 +63,7 @@ const SignsupPage = () => {
           {errors.password?.message}
         </p>
         <StyledInput
-          type={`password`}
+          type="password"
           placeholder="비밀번호를 다시 입력해주세요 !"
           {...register("passwordCheck")}
           isValidate={!!errors.passwordCheck}
@@ -64,6 +73,14 @@ const SignsupPage = () => {
         </p>
         <StyledButton disabled={!isValid}>제출</StyledButton>
       </StyledForm>
+
+      {/* 로딩, 성공 및 실패 메시지 */}
+      {isLoading && <StyledP>로딩 중...</StyledP>}
+      {isError ? (
+        <StyledP>회원가입에 실패했습니다.</StyledP>
+      ) : isSignUp ? (
+        <StyledP>회원가입에 성공했습니다.</StyledP>
+      ) : null}
     </Wrapper>
   );
 };
@@ -93,9 +110,9 @@ const StyledInput = styled.input`
   margin: 10px;
   border-radius: 8px;
   padding: 5px;
-  border: 2px solid ${(props) => (props.isValidate ? "red" : "#ccc")}; /* 에러 시 빨간 테두리 */
+  border: 2px solid ${(props) => (props.isValidate ? "red" : "#ccc")};
   outline: none;
-  transition: border-color 0.3s ease; /* 테두리 색상 전환 애니메이션 */
+  transition: border-color 0.3s ease;
 `;
 
 const StyledButton = styled.button`
@@ -111,10 +128,15 @@ const StyledButton = styled.button`
   border: none;
   color: ${(props) => (props.disabled ? "#000000" : "#ffffff")};
   background-color: ${(props) => (props.disabled ? "#999999" : "#e10f57")};
-  &:not(:disable):hover {
+  &:not(:disabled):hover {
     background-color: #1e6b7b;
     color: white;
   }
+`;
+
+const StyledP = styled.p`
+  color: white;
+  margin: 0;
 `;
 
 export default SignsupPage;
