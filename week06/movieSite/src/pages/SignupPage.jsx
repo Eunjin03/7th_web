@@ -3,10 +3,11 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useSignUp from "../customHook/useSignUp";
+import { useNavigate } from "react-router-dom";
 
 const SignsupPage = () => {
   const { isSignUp, isLoading, isError, signUp } = useSignUp();
-
+  const navigate = useNavigate();
   const schema = yup.object().shape({
     email: yup
       .string()
@@ -79,7 +80,9 @@ const SignsupPage = () => {
       {isError ? (
         <StyledP>회원가입에 실패했습니다.</StyledP>
       ) : isSignUp ? (
-        <StyledP>회원가입에 성공했습니다.</StyledP>
+        navigate(`/login`, {
+          replace: false,
+        })
       ) : null}
     </Wrapper>
   );
