@@ -1,8 +1,18 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useLoginContext } from "../context/useLogin";
 
 const Navbar = () => {
-  return (
+  const navigate = useNavigate();
+  const { isLogin, userEmail, logout } = useLoginContext();
+
+  const handleLogout = () => {
+    logout(); // 토큰 삭제 및 인증 상태 초기화
+    navigate("/"); // 로그아웃 후 홈 페이지로 이동
+  };
+
+  console.log(isLogin);
+  return !isLogin ? (
     <StyledNavbar>
       <Link to="/">
         <HomeButton>Yongcha</HomeButton>
@@ -16,6 +26,16 @@ const Navbar = () => {
             Login
           </LogicButton>
         </Link>
+      </FlexDiv>
+    </StyledNavbar>
+  ) : (
+    <StyledNavbar>
+      <Link to="/">
+        <HomeButton>Yongcha</HomeButton>
+      </Link>
+      <FlexDiv>
+        <StyledP> {userEmail}님 반갑습니다.</StyledP>
+        <StyledP onClick={handleLogout}>로그아웃</StyledP>
       </FlexDiv>
     </StyledNavbar>
   );
@@ -60,5 +80,10 @@ const HomeButton = styled.div`
   font-size: 20px;
   font-weight: 600;
 `;
-
+const StyledP = styled.p`
+  color: white;
+  margin: 0;
+  text-align: center;
+  padding: 15px;
+`;
 export default Navbar;

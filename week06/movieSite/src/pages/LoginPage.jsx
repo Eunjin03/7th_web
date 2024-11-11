@@ -3,11 +3,11 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
-import useLogin from "../customHook/useLogin";
+import { useLoginContext } from "../context/useLogin";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { isLogin, isLoading, isError, login } = useLogin();
+  const { isLogin, isLoading, isError, login } = useLoginContext();
 
   const schema = yup.object().shape({
     email: yup

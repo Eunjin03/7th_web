@@ -2,21 +2,16 @@ import { useState } from "react";
 import axios from "axios";
 
 const useAuth = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
   // 토큰이 필요한 API 요청을 처리하고, 만료된 경우 자동으로 갱신 시도
   const requestWithAuth = async (url, options = {}) => {
     try {
       const accessToken = localStorage.getItem("accessToken");
 
       const response = await axios({
-        ...options,
-        url,
-        headers: {
-          ...options.headers,
-          Authorization: `Bearer ${accessToken}`,
-        },
+        method: options.method || "GET", // 기본 메서드는 GET
+        url: url,
+        headers: options.headers || {}, // 전달된 headers가 없으면 빈 객체
+        data: options.data || null, // POST나 PUT 요청에서 사용하는 데이터
       });
       return response.data;
     } catch (error) {
@@ -30,13 +25,13 @@ const useAuth = () => {
       throw error;
     }
   };
-
   // refresh token을 사용해 새로운 access token을 요청
   const refreshToken = async () => {
     const storedRefreshToken = localStorage.getItem("refreshToken");
 
     if (!storedRefreshToken) {
-      logout();
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       return false;
     }
 
@@ -58,22 +53,16 @@ const useAuth = () => {
       if (newRefreshToken) {
         localStorage.setItem("refreshToken", newRefreshToken);
       }
-      setIsAuthenticated(true);
       return true;
     } catch (error) {
       console.error("토큰 갱신 실패:", error);
-      logout(); // 갱신 실패 시 로그아웃 처리
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       return false;
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    setIsAuthenticated(false);
-  };
-
-  return { isAuthenticated, isLoading, requestWithAuth, logout };
+  return { requestWithAuth };
 };
 
 export default useAuth;
