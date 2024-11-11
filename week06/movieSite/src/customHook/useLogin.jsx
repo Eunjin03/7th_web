@@ -1,35 +1,34 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 
-// 수정 필요
-
-const useLogin = (id, pw) => {
-  const [isLogin, setLogin] = useState(false);
-  const [isError, setError] = useState(false);
+const useLogin = () => {
   const [isLoading, setLoading] = useState(false);
+  const [isError, setError] = useState(false);
+  const [isLogin, setLogin] = useState(false);
 
-  useEffect(() => {
-    const login = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.post(
-          `${import.meta.env.VITE_BACK_API_URL}/auth/login`,
-          {
-            email: id,
-            password: pw,
-          }
-        );
-        setLogin(response.data.isLogin);
-      } catch (err) {
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-    login();
-  }, []);
+  const login = async (email, password) => {
+    setLoading(true);
+    setError(false);
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACK_API_URL}/auth/login`,
+        { email: email, password: password }
+      );
 
-  return { isLogin, isLoading, isError };
+      const { accessToken, refreshToken } = response.data;
+
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+
+      setLogin(true);
+    } catch (error) {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { isLogin, isLoading, isError, login };
 };
 
 export default useLogin;

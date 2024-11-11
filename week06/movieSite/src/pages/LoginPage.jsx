@@ -2,8 +2,13 @@ import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useNavigate } from "react-router-dom";
+import useLogin from "../customHook/useLogin";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+  const { isLogin, isLoading, isError, login } = useLogin();
+
   const schema = yup.object().shape({
     email: yup
       .string()
@@ -25,9 +30,10 @@ const LoginPage = () => {
     mode: "onChange",
   });
 
-  const onSubmit = (data) => {
-    console.log("폼 데이터 제출");
+  const onSubmit = async (data) => {
     console.log(data);
+    const { email, password } = data;
+    await login(email, password);
   };
 
   return (
@@ -53,6 +59,14 @@ const LoginPage = () => {
           {errors.password?.message}
         </p>
         <StyledButton disabled={!isValid}>제출</StyledButton>
+        {isLoading && <StyledP>로딩 중...</StyledP>}
+        {isError ? (
+          <StyledP>아이디와 비밀번호를 확인하세요</StyledP>
+        ) : isLogin ? (
+          navigate(`/`, {
+            replace: false,
+          })
+        ) : null}
       </StyledForm>
     </Wrapper>
   );
@@ -65,6 +79,13 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
+`;
+
+const StyledP = styled.p`
+  color: white;
+  margin: 0;
+  display: flex;
+  justify-content: center;
 `;
 
 const StyledForm = styled.form`
