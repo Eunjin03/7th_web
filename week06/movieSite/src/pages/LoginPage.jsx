@@ -27,7 +27,7 @@ const LoginPage = () => {
     formState: { errors, isValid },
   } = useForm({
     resolver: yupResolver(schema),
-    mode: "onChange",
+    mode: "all",
   });
 
   const onSubmit = async (data) => {

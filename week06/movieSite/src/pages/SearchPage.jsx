@@ -3,17 +3,33 @@ import useDebounce from "../customHook/useDebounce";
 import { useState, useEffect } from "react";
 import useSearchMovie from "../customHook/useSearchMovie";
 import Card from "../components/movies.jsx";
+import * as S from "../components/card.styled.jsx";
+import { MovieList as BaseMovieList } from "../components/card.styled.jsx";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const SearchPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const { movies, isLoading, isError } = useSearchMovie(debouncedSearchTerm);
+  const navigate = useNavigate();
+  const [searchParam, setSearchParam] = useSearchParams({
+    mq: "",
+  });
 
   useEffect(() => {
     if (debouncedSearchTerm) {
       console.log("검색어: ", debouncedSearchTerm);
     }
   }, [debouncedSearchTerm]);
+
+  const mq = searchParam.get("mq");
+
+  const handleSearch = () => {
+    if (mq === searchTerm) return;
+
+    navigate(`/search?mq=${searchTerm}`);
+    console.log("검색됨");
+  };
 
   return (
     <Wrapper>
@@ -24,31 +40,30 @@ const SearchPage = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <StyledButton>검색</StyledButton>
+        <StyledButton onClick={handleSearch}>검색</StyledButton>
       </StyledDiv>
       {isLoading ? (
         <ErrorP>Loading...</ErrorP>
-      ) : isError ? (
+      ) : isError || movies.length === 0 ? (
         <ErrorP>
-          해당하는 검색어 {searchTerm}에 해당하는 데이터가 없습니다{" "}
+          해당하는 검색어 {debouncedSearchTerm}에 대한 데이터가 없습니다.
         </ErrorP>
       ) : (
-        <MovieList>
+        <MovieListStyled>
           {movies.map((movie) => (
-            <MovieContainer key={movie.id}>
+            <S.MovieContainer key={movie.id}>
               <Card movie={movie} />
-              <MovieDetails>
+              <S.MovieDetails>
                 <StyledP fontWeight={600}>{movie.title}</StyledP>
                 <StyledP fontSize="8px">{movie.release_date}</StyledP>
-              </MovieDetails>
-            </MovieContainer>
+              </S.MovieDetails>
+            </S.MovieContainer>
           ))}
-        </MovieList>
+        </MovieListStyled>
       )}
     </Wrapper>
   );
 };
-
 const Wrapper = styled.div`
   background-color: #000000;
   width: 100vw;
@@ -85,44 +100,10 @@ const StyledInput = styled.input`
   border-radius: 10px 0px 0px 10px;
 `;
 
-const MovieList = styled.div`
-  display: grid;
-  gap: 10px;
-  grid-template-columns: repeat(10, 1fr);
-  width: 100%;
+const MovieListStyled = styled(BaseMovieList)`
   margin-top: 20px;
   margin-left: 20px;
   margin-right: 20px;
-
-  @media (max-width: 1200px) {
-    grid-template-columns: repeat(8, 1fr);
-  }
-
-  @media (max-width: 900px) {
-    grid-template-columns: repeat(6, 1fr);
-  }
-
-  @media (max-width: 600px) {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  @media (max-width: 400px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-`;
-
-const MovieContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%; /* 그리드 아이템의 너비를 그리드 칸에 맞춤 */
-`;
-
-const MovieDetails = styled.div`
-  width: 6rem;
-  margin-top: 10px;
-  text-align: center;
-  color: white; /* 텍스트가 검은 배경에 보이도록 흰색 설정 */
 `;
 
 const StyledP = styled.p`

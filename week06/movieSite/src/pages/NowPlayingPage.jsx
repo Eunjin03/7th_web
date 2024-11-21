@@ -1,5 +1,5 @@
 import styled from "styled-components";
-
+import * as S from "../components/card.styled.jsx";
 import Card from "../components/movies.jsx";
 import useFetchMovies from "../customHook/useFetchMovies.jsx";
 

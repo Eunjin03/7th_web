@@ -20,8 +20,11 @@ const useSearchMovie = (requestAdr) => {
             },
           }
         );
+        console.log(response.data.results);
         if (response.data.results.length === 0) {
           setError(true);
+        } else {
+          setError(false);
         }
         setMovies(response.data.results);
       } catch (error) {

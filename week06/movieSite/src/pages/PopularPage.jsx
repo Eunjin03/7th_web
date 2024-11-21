@@ -1,5 +1,5 @@
 import styled from "styled-components";
-
+import * as S from "../components/card.styled.jsx";
 import Card from "../components/movies.jsx";
 import useFetchMovies from "../customHook/useFetchMovies.jsx";
 
@@ -26,17 +26,17 @@ const PopularPage = () => {
 
   return (
     <Wrapper>
-      <MovieList>
+      <S.MovieList>
         {movies.map((movie) => (
-          <MovieContainer key={movie.id}>
+          <S.MovieContainer key={movie.id}>
             <Card movie={movie} />
-            <MovieDetails>
+            <S.MovieDetails>
               <StyledP fontWeight={600}>{movie.title}</StyledP>
               <StyledP fontSize="8px">{movie.release_date}</StyledP>
-            </MovieDetails>
-          </MovieContainer>
+            </S.MovieDetails>
+          </S.MovieContainer>
         ))}
-      </MovieList>
+      </S.MovieList>
     </Wrapper>
   );
 };
@@ -58,43 +58,6 @@ const Wrapper = styled.div`
   width: 100vw;
   min-height: 100vh; /* 화면 크기에 맞게 최소 높이만 적용 */
   padding: 20px;
-`;
-
-const MovieContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%; /* 그리드 아이템의 너비를 그리드 칸에 맞춤 */
-`;
-
-const MovieDetails = styled.div`
-  width: 6rem;
-  margin-top: 10px;
-  text-align: center;
-  color: white; /* 텍스트가 검은 배경에 보이도록 흰색 설정 */
-`;
-
-const MovieList = styled.div`
-  display: grid;
-  gap: 10px;
-  grid-template-columns: repeat(10, 1fr);
-  width: 100%;
-
-  @media (max-width: 1200px) {
-    grid-template-columns: repeat(8, 1fr);
-  }
-
-  @media (max-width: 900px) {
-    grid-template-columns: repeat(6, 1fr);
-  }
-
-  @media (max-width: 600px) {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  @media (max-width: 400px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
 `;
 
 export default PopularPage;
