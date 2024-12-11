@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import useSearchMovie from "../customHook/useSearchMovie";
 import Card from "../components/movies.jsx";
 import * as S from "../components/card.styled.jsx";
+import SkeletonElement from "../components/skeleton.jsx";
 import { MovieList as BaseMovieList } from "../components/card.styled.jsx";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
@@ -43,7 +44,9 @@ const SearchPage = () => {
         <StyledButton onClick={handleSearch}>검색</StyledButton>
       </StyledDiv>
       {isLoading ? (
-        <ErrorP>Loading...</ErrorP>
+        <MovieListStyled>
+          <SkeletonElement />
+        </MovieListStyled>
       ) : isError || movies.length === 0 ? (
         <ErrorP>
           해당하는 검색어 {debouncedSearchTerm}에 대한 데이터가 없습니다.
@@ -104,6 +107,7 @@ const MovieListStyled = styled(BaseMovieList)`
   margin-top: 20px;
   margin-left: 20px;
   margin-right: 20px;
+  width: calc(100% - 40px);
 `;
 
 const StyledP = styled.p`

@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const Movie = ({ movie }) => {
   const navigate = useNavigate();
-
+  console.log(movie);
   return (
     <StyledButton
       background={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
