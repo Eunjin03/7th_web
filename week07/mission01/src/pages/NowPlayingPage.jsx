@@ -1,16 +1,26 @@
+import { useQuery } from "@tanstack/react-query";
+import { getMovies } from "../hooks/queries/useGetMovies";
 import styled from "styled-components";
 import * as S from "../components/card.styled.jsx";
 import Card from "../components/movies.jsx";
-import useFetchMovies from "../customHook/useFetchMovies.jsx";
+import SkeletonElement from "../components/skeleton.jsx";
 
 const NowPlayingPage = () => {
-  const { movies, isLoading, isError } = useFetchMovies(
-    "/movie/now_playing?language=ko-KR&page=1"
-  );
-  if (isLoading) {
+  // React Query를 사용한 비동기 데이터 호출
+  const { data, isPending, isError } = useQuery({
+    queryKey: ["movies", "now_playing"],
+    queryFn: () => getMovies({ category: "now_playing", pageParam: 1 }),
+    cacheTime: 10000,
+    staleTime: 10000, // 백엔드에 무분별한 요청을 보내지 않기 위해 캐시된 데이터를 사용
+  });
+
+  // data.results가 실제 영화 리스트
+  const movies = data?.results || [];
+
+  if (isPending) {
     return (
-      <Wrapper style={{ color: "white" }}>
-        <p>Loading...</p>
+      <Wrapper>
+        <SkeletonElement />
       </Wrapper>
     );
   }

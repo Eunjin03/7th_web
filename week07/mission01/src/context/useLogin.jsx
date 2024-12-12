@@ -1,6 +1,6 @@
 import { useState, createContext, useContext } from "react";
 import axios from "axios";
-import useAuth from "../customHook/useAuth";
+import useAuth from "../hooks/useAuth";
 
 export const LoginContext = createContext();
 

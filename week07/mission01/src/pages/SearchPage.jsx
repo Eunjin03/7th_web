@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import useDebounce from "../customHook/useDebounce";
+import useDebounce from "../hooks/useDebounce.jsx";
 import { useState, useEffect } from "react";
-import useSearchMovie from "../customHook/useSearchMovie";
+import useSearchMovie from "../hooks/useSearchMovie.jsx";
 import Card from "../components/movies.jsx";
 import * as S from "../components/card.styled.jsx";
 import SkeletonElement from "../components/skeleton.jsx";

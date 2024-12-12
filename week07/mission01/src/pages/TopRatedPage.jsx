@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Card from "../components/movies.jsx";
-import useFetchMovies from "../customHook/useFetchMovies.jsx";
+import useFetchMovies from "../hooks/useFetchMovies.jsx";
 import * as S from "../components/card.styled.jsx";
 
 const TopRatedPage = () => {

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import useSignUp from "../customHook/useSignUp";
+import useSignUp from "../hooks/useSignUp";
 import { useNavigate } from "react-router-dom";
 
 const SignsupPage = () => {
