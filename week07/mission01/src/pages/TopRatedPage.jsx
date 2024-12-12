@@ -2,16 +2,24 @@ import styled from "styled-components";
 import Card from "../components/movies.jsx";
 import useFetchMovies from "../hooks/useFetchMovies.jsx";
 import * as S from "../components/card.styled.jsx";
+import { useQuery } from "@tanstack/react-query";
+import { getMovies } from "../hooks/queries/useGetMovies.js";
+import SkeletonElement from "../components/skeleton.jsx";
 
 const TopRatedPage = () => {
-  const { movies, isLoading, isError } = useFetchMovies(
-    "/movie/top_rated?language=ko-KR&page=1"
-  );
+  const { data, isPending, isError } = useQuery({
+    queryKey: ["movies", "top_rated"],
+    queryFn: () => getMovies({ category: "top_rated", pageParam: 1 }),
+    cacheTime: 10000,
+    staleTime: 10000,
+  });
 
-  if (isLoading) {
+  const movies = data?.results || [];
+
+  if (isPending) {
     return (
       <Wrapper>
-        <p style={{ color: "white" }}>Loading...</p>
+        <SkeletonElement />
       </Wrapper>
     );
   }

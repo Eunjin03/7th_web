@@ -12,7 +12,7 @@ const getMovies = async ({ category, pageParam }) => {
     }
   );
 
-  console.log("영화 받아오는 중,,,,,");
+  console.log(`${category} 영화 받아오는 중,,,,,`);
 
   return data;
 };
