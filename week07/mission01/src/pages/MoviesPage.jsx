@@ -2,15 +2,24 @@ import styled from "styled-components";
 import * as S from "../components/card.styled.jsx";
 import Card from "../components/movies.jsx";
 import useFetchMovies from "../hooks/useFetchMovies.jsx";
+import { useQuery } from "@tanstack/react-query";
+import { getMovies } from "../hooks/queries/useGetMovies.js";
+import SkeletonElement from "../components/skeleton.jsx";
 
 const MoviePage = () => {
-  const { movies, isLoading, isError } = useFetchMovies(
-    "/movie/popular?language=ko-KR&page=1"
-  );
-  if (isLoading) {
+  const { data, isPending, isError } = useQuery({
+    queryKey: ["movies", "popular"],
+    queryFn: () => getMovies({ category: "popular", pageParam: 1 }),
+    cacheTime: 10000,
+    staleTime: 10000,
+  });
+
+  const movies = data?.results || [];
+
+  if (isPending) {
     return (
       <Wrapper>
-        <p style={{ color: "white" }}>Loading...</p>
+        <SkeletonElement />
       </Wrapper>
     );
   }
