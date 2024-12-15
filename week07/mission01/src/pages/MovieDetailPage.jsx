@@ -5,18 +5,48 @@ import useMovieDetail from "../hooks/useMovieDetail.jsx";
 import useMovieCredits from "../hooks/useMovieCredits.jsx";
 import Cast from "../components/profile.jsx";
 
+import { useQuery } from "@tanstack/react-query";
+import { getMovieDetail } from "../hooks/queries/useGetMovieDetail.js";
+
 const MovieDetailPage = () => {
   const { movieId } = useParams();
 
   // 영화 데이터를 API에서 가져옴
-  const { movies, isLoading, isError } = useMovieDetail(
-    `/movie/${movieId}?language=ko-KR`
-  );
-  const { casts, isLoadingCast, isErrorCast } = useMovieCredits(
-    `/movie/${movieId}/credits?language=ko-KR`
-  );
+  const {
+    data: movieData,
+    isPending: isPendingMovie,
+    isError: isErrorMovie,
+  } = useQuery({
+    queryKey: ["movie", movieId],
+    queryFn: () =>
+      getMovieDetail({ requestAdr: `/movie/${movieId}?language=ko-KR` }),
+    cacheTime: 10000,
+    staleTime: 10000,
+  });
 
-  if (isLoading || isLoadingCast) {
+  const movies = movieData?.data;
+
+  // const { casts, isLoadingCast, isErrorCast } = useMovieCredits(
+  //   `/movie/${movieId}/credits?language=ko-KR`
+  // );
+
+  const {
+    data: castData,
+    isPending: isLoadingCast,
+    isError: isErrorCast,
+  } = useQuery({
+    queryKey: ["movie", movieId, "credits"],
+    queryFn: () =>
+      getMovieDetail({
+        requestAdr: `/movie/${movieId}/credits?language=ko-KR`,
+      }),
+    cacheTime: 10000,
+    staleTime: 10000,
+  });
+
+  const casts = castData?.data.cast;
+
+  if (isPendingMovie || isLoadingCast) {
     return (
       <Wrapper>
         <p style={{ color: "white" }}>Loading...</p>
@@ -24,7 +54,7 @@ const MovieDetailPage = () => {
     );
   }
 
-  if (isError || isErrorCast) {
+  if (isErrorMovie || isErrorCast) {
     return (
       <Wrapper>
         <p style={{ color: "white" }}>Error fetching movie details.</p>
